@@ -13,13 +13,14 @@ jobs:
 
       - name: Install Mend CLI
         run: |
-          curl -L https://downloads.mend.io/cli/mend-linux-latest -o mend
+          curl -L https://downloads.mend.io/cli/linux_amd64/mend -o mend
           chmod +x mend
           sudo mv mend /usr/local/bin/mend
 
-      - name: Run Mend Scan
+      - name: Authenticate and run scan
         env:
           MEND_API_TOKEN: ${{ secrets.MEND_API_TOKEN }}
         run: |
           mend auth login --token "$MEND_API_TOKEN"
           mend dep scan --product "AIGoat" --project "AIGoat"
+
