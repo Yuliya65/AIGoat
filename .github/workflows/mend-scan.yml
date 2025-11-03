@@ -13,9 +13,10 @@ jobs:
 
       - name: Install Mend CLI
         run: |
-          curl -L https://downloads.mend.io/cli/windows/mend.exe -o mend.exe
+          curl -L -o mend.exe https://downloads.mend.io/cli/windows/mend.exe
+          dir
 
-      - name: Test CLI
+      - name: Test Mend CLI
         run: |
           ./mend.exe --version
 
