@@ -15,7 +15,7 @@ jobs:
       # Step 2: Download Mend CLI
       - name: Download Mend CLI
         run: |
-          Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe
+          Invoke-WebRequest -Uri "https://downloads.mend.io/cli/windows_amd64/mend.exe" -OutFile "mend.exe"
 
       # Step 3: Test CLI binary
       - name: Test Mend CLI
