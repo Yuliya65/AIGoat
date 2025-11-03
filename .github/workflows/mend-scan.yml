@@ -5,7 +5,7 @@ on:
 
 jobs:
   mend-scan:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout Repo
@@ -13,12 +13,14 @@ jobs:
 
       - name: Install Mend CLI
         run: |
-          curl -L https://downloads.mend.io/cli/linux_amd64/mend -o mend
-          chmod +x mend
-          sudo mv mend /usr/local/bin/mend
+          curl -L https://downloads.mend.io/cli/windows/mend.exe -o mend.exe
+
+      - name: Test CLI
+        run: |
+          ./mend.exe --version
 
       - name: Run Mend Scan
         env:
           MEND_ACCESS_KEY: ${{ secrets.MEND_ACCESS_KEY }}
         run: |
-          mend dep scan --product "AIGoat" --project "AIGoat"
+          ./mend.exe dep scan --product "AIGoat" --project "AIGoat"
