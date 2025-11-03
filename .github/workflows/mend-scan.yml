@@ -17,10 +17,8 @@ jobs:
           chmod +x mend
           sudo mv mend /usr/local/bin/mend
 
-      - name: Authenticate and run scan
+      - name: Run Mend Scan
         env:
           MEND_API_TOKEN: ${{ secrets.MEND_API_TOKEN }}
         run: |
-          mend auth login --token "$MEND_API_TOKEN"
           mend dep scan --product "AIGoat" --project "AIGoat"
-
