@@ -23,3 +23,4 @@ jobs:
           MEND_USER_EMAIL: ${{ secrets.MEND_USER_EMAIL }}
         run: |
           mend dep scan --product "AIGoat" --project "AIGoat"
+
