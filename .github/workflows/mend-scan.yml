@@ -1,1 +1,26 @@
+name: Mend Scan
+
+on:
+  workflow_dispatch:  # manual trigger
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  mend-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download Mend Unified Agent
+        run: |
+          curl -L https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar -o wss-unified-agent.jar
+
+      - name: Run Mend Scan
+        env:
+          WS_API_KEY: ${{ secrets.WS_API_KEY }}
+        run: |
+          java -jar wss-unified-agent.jar -c whitesource.config
 
