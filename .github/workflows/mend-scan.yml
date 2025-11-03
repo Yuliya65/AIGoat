@@ -8,13 +8,23 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
+      # Step 1: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
+      # Step 2: Download Mend CLI
+      - name: Download Mend CLI
+        run: |
+          Invoke-WebRequest -Uri "https://download.mend.io/windows/mend-cli/latest/mend.exe" -OutFile "mend.exe"
+
+      # Step 3: Test CLI binary
+      - name: Test Mend CLI
+        run: |
+          .\mend.exe --version
+
+      # Step 4: Run dependency scan
       - name: Run Mend Scan
-        uses: mend/github-action@v2
-        with:
-          product: "AIGoat"
-          project: "AIGoat"
         env:
           MEND_ACCESS_KEY: ${{ secrets.MEND_ACCESS_KEY }}
+        run: |
+          .\mend.exe dep scan --product "AIGoat" --project "AIGoat"
