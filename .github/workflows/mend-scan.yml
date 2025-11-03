@@ -1,26 +1,28 @@
 name: Mend Scan
 
 on:
-  workflow_dispatch:  # manual trigger
-  push:
-    branches: ["main"]
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   mend-scan:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-      - name: Download Mend Unified Agent
+      - name: Install Mend CLI
         run: |
-          curl -L https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar -o wss-unified-agent.jar
+          curl -LO https://downloads.mend.io/cli/linux/mend
+          chmod +x mend
+          sudo mv mend /usr/local/bin/mend
 
       - name: Run Mend Scan
         env:
-          WS_API_KEY: ${{ secrets.WS_API_KEY }}
+          MEND_API_TOKEN: ${{ secrets.MEND_API_TOKEN }}
+          MEND_EMAIL: "YOUR_EMAIL@DOMAIN.COM"
+          MEND_PRODUCT_NAME: "AIGoat"
+          MEND_PROJECT_NAME: "AIGoat"
         run: |
-          java -jar wss-unified-agent.jar -c whitesource.config
-
+          mend init
+          mend dep scan --product "$MEND_PRODUCT_NAME" --project "$MEND_PROJECT_NAME"
