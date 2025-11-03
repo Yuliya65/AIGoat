@@ -19,8 +19,6 @@ jobs:
 
       - name: Run Mend Scan
         env:
-          MEND_API_KEY: ${{ secrets.MEND_API_KEY }}
-          MEND_USER_EMAIL: ${{ secrets.MEND_USER_EMAIL }}
+          MEND_ACCESS_KEY: ${{ secrets.MEND_ACCESS_KEY }}
         run: |
           mend dep scan --product "AIGoat" --project "AIGoat"
-
