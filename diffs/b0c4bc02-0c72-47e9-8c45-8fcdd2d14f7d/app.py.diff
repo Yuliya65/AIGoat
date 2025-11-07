@@ -241,14 +241,18 @@
          features = pickle.loads(response['Body'].read())
  
          payload = {
-+        allowed_domains = {"example.com", "api.example.com"}
-+        parsed_url = urlparse(api_endpoint)
-+        if parsed_url.hostname not in allowed_domains:
-+            raise ValueError("Invalid or disallowed URL")
-+        
              'bucket_name': bucket_name,
              'img_key': photo_filename
          }
++        # Restrict allowed domains, TODO: add allowed domains here
++        allowed_domains = {"example.com", "api.example.com"}
++        try:
++            parsed_url = urlparse(api_endpoint)
++            if parsed_url.hostname not in allowed_domains:
++                return jsonify({'error': 'Invalid or disallowed API endpoint'}), 400
++        except Exception:
++            return jsonify({'error': 'Malformed API endpoint URL'}), 400
++        
  
          response = requests.post(api_endpoint, json=payload)
          if response.status_code != 200:
