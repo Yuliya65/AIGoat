@@ -196,9 +196,7 @@
      if request.method == 'POST':
          try:
              app.logger.info('Request Files: %s', request.__dict__)
--        except:
-+            return jsonify({'error': escape('No photo uploaded')}), 400
-+            
+         except:
              app.logger.error('Error getting request files')
  
          if 'photo' not in request.files:
@@ -206,7 +204,9 @@
  
          photo = request.files['photo']
          app.logger.info(f"="*20)
-         app.logger.info(photo.filename)
+-        app.logger.info(photo.filename)
++        app.logger.info(escape(photo.filename))
++        
  
          if not allowed_file(photo.filename):
              return jsonify({'error': 'Invalid file type'}), 400
