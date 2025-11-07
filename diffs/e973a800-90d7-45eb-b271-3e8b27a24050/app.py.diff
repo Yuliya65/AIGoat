@@ -114,14 +114,20 @@
  def get_recommendations(current_user):
      user = User.query.filter_by(username=current_user).first_or_404()
  
--    request_payload = {
-+    allowed_domains = {"example.com", "api.example.com"}
-+    parsed_url = urlparse(args.get_recs_api_gateway)
-+    if parsed_url.hostname not in allowed_domains:
-+        raise ValueError("Invalid or disallowed URL")
-+    response = requests.post(args.get_recs_api_gateway, json=request_payload, headers={'Content-Type': 'application/json'}, timeout=60)
+     request_payload = {
          "user_id": user.id
      }
++    # Restrict allowed domains, TODO: add allowed domains here
++    allowed_domains = {"example.com", "api.example.com"}
++    try:
++        parsed_url = urlparse(args.get_recs_api_gateway)
++        if parsed_url.hostname not in allowed_domains:
++            logging.error("Invalid or disallowed URL")
++            return jsonify(error="Invalid or disallowed URL"), 400
++    except Exception:
++        logging.error("Malformed URL")
++        return jsonify(error="Malformed URL"), 400
++    
  
      response = requests.post(args.get_recs_api_gateway, json=request_payload, headers={'Content-Type': 'application/json'}, timeout=60)
      response_json = response.json()
