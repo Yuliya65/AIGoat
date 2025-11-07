@@ -165,13 +165,13 @@
          data = request.json
          username = data.get('username')
          password = data.get('password')
--        if username in users and users[username] == password:
-+        return jsonify({'message': escape('Invalid credentials')}), 401
-+        
+         if username in users and users[username] == password:
              token = jwt.encode({'username': username, 'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=1)}, app.config['SECRET_KEY'], algorithm="HS256")
              logging.info(token)
              return jsonify({'message': 'Login successful for {"user_id": 1}', 'token': token})
-         return jsonify({'message': 'Invalid credentials'}), 401
+-        return jsonify({'message': 'Invalid credentials'}), 401
++        return jsonify({'message': 'Invalid credentials for user: ' + escape(username)}), 401
++        
      except Exception as e:
          logging.error(f'Error during login: {e}')
          print(f'Error during login: {e}')
