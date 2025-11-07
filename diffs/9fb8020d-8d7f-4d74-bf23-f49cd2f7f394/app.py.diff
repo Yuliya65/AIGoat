@@ -331,15 +331,19 @@
      if not content:
          return jsonify({"error": "Content is required"}), 400
  
-+    allowed_domains = {"example.com", "api.example.com"}
-+    parsed_url = urlparse(args.comments_api_gateway)
-+    if parsed_url.hostname not in allowed_domains:
-+        raise ValueError("Invalid or disallowed URL")
-+    
      product = Product.query.get(product_id)
      if product is None:
          return jsonify({"error": "Id not found"}), 404
  
++    # Restrict allowed domains, TODO: add allowed domains here
++    allowed_domains = {"example.com", "api.example.com"}
++    try:
++        parsed_url = urlparse(args.comments_api_gateway)
++        if parsed_url.hostname not in allowed_domains:
++            return jsonify({"error": "Invalid or disallowed URL"}), 400
++    except Exception:
++        return jsonify({"error": "Malformed URL"}), 400
++    
      response = requests.post(args.comments_api_gateway, json={"author": str(author), "content": str(content), "is_offensive": is_offensive, "probability": probability})
      if response.status_code != 200:
          return jsonify({"error": "Error calling comment filter service"}), 500
