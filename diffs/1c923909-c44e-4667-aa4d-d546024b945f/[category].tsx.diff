@@ -11,11 +11,11 @@
  const Category = () => {
    const [isLoading, setLoading] = useState(false);
  
-+const sanitizedCategoryName = currentCategoryName ? DOMPurify.sanitize(currentCategoryName) : null;
    const router = useRouter();
    // console.log('router.query', router.query)
    const { category: categoryParam } = router.query;
    const currentCategoryName = categoryParam ? categoryParam : null;
++const sanitizedCategoryName = currentCategoryName ? DOMPurify.sanitize(currentCategoryName) : null;
    // const currentCategoryName = categoryParam ? categoryParam[1] : '...';
  
    const dispatch = useDispatch();
@@ -34,15 +34,16 @@
          })
        );
        // dispatch(fetchCategory(currentCategoryName));
--    }
-+<MainLayout title={`AI-Goat - ${sanitizedCategoryName} category`}>
+     }
    }, [currentCategoryName]);
  
    return (
-     <MainLayout title={`AI-Goat - ${currentCategoryName} category`}>
+-    <MainLayout title={`AI-Goat - ${currentCategoryName} category`}>
++<MainLayout title={`AI-Goat - ${sanitizedCategoryName} category`}>
        <MainPageHeader
            // @ts-ignore
-         title={`Category: ${currentCategoryName?.replace(/-/g, ' ') || '...'}`}
+-        title={`Category: ${currentCategoryName?.replace(/-/g, ' ') || '...'}`}
++title={`Category: ${sanitizedCategoryName?.replace(/-/g, ' ') || '...'}`}
          subTitle={curretCategoryDesc}
        />
        <ProductListRenderer
