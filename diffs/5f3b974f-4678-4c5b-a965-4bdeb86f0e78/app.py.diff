@@ -367,13 +367,13 @@
          response_data.update(result)
          return jsonify(response_data), 400
  
--@app.route('/products/<int:product_id>/comments', methods=['GET'])
-+        return jsonify({"error": escape("Id not found")}), 404
-+        
+ @app.route('/products/<int:product_id>/comments', methods=['GET'])
  def fetch_product_comments(product_id):
      product = Product.query.get(product_id)
      if product is None:
-         return jsonify({"error": "Id not found"}), 404
+-        return jsonify({"error": "Id not found"}), 404
++        return jsonify({"error": f"Id {escape(product_id)} not found"}), 404
++        
  
      comments = [comment.to_dict() for comment in product.comments]
      return jsonify(comments)
