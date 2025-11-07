@@ -233,10 +233,12 @@
              command_output = process_image(image_data)
  
          if command_output:
--            return jsonify({'metadata_output': command_output}), 400
--
-+            response = s3.get_object(Bucket=bucket_name, Key=features_file_key)
-+            
+             return jsonify({'metadata_output': command_output}), 400
+ 
+         features_file_key = 'image_features.pkl'  # S3 key for the features file
+ 
+-        response = s3.get_object(Bucket=bucket_name, Key=features_file_key)
+-        features = pickle.loads(response['Body'].read())
 +            # Define a restricted unpickler locally to limit allowed classes.
 +            # TODO: Add trusted classes to the whitelist.
 +            class RestrictedUnpickler(pickle.Unpickler):
@@ -260,11 +262,8 @@
 +            def safe_pickle_loads(s):
 +                return RestrictedUnpickler(io.BytesIO(s)).load()
 +            
++            response = s3.get_object(Bucket=bucket_name, Key=features_file_key)
 +            features = safe_pickle_loads(response['Body'].read())
-         features_file_key = 'image_features.pkl'  # S3 key for the features file
- 
-         response = s3.get_object(Bucket=bucket_name, Key=features_file_key)
-         features = pickle.loads(response['Body'].read())
  
          payload = {
              'bucket_name': bucket_name,
